@@ -1,0 +1,8 @@
+{
+  "deno.enable": true,
+  "editor.formatOnSave": true,
+  "nixEnvSelector.nixFile": "${workspaceFolder}/default.nix",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
