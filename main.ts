@@ -111,6 +111,28 @@ if (import.meta.main) {
 
       // (2) create or update
       if (existingTask) {
+        // Delete task if owner is no longer mapped
+        if (!ASSIGNEES[ticket.owner_id]) {
+          console.info(
+            `Deleting task ${existingTask.id} - owner ${ticket.owner_id} is not mapped.`
+          );
+
+          await fetch(
+            `${OP_URL}/api/v3/work_packages/${existingTask.id}`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: "Basic " + btoa("apikey:" + OP_TOKEN),
+              },
+            }
+          ).then((r) => {
+            if (!r.ok) throw new Error(`Delete failed with status ${r.status}`);
+          });
+
+          console.info("Deleted task successfully.");
+          return new Response(null, { status: 200 });
+        }
+
         // update existing task
         await fetch(
           `${OP_URL}/api/v3/work_packages/${existingTask.id}?notify=false`,
